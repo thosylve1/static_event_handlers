@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace StaticEventHandlers
 {
@@ -12,6 +13,7 @@ namespace StaticEventHandlers
         private int Majority => _numberOfNodes / 2 + 1;
 
         private bool _decisionReached = false;
+        private readonly Random _random = new Random();
 
         public Proposer(string clientProposal, Action<bool> onCompletionCallback)
         {
@@ -26,7 +28,9 @@ namespace StaticEventHandlers
             {
                 ballot += _numberOfNodes;
                 HoldElection(ballot);
-                SleepRandomTimeout();
+
+                SetTimeout(_random.Next(250,1000), Start);
+                
                 if (_decisionReached)
                     return;
             }
@@ -49,10 +53,16 @@ namespace StaticEventHandlers
         {
         }
 
+        void SetTimeout(int timeoutMs, Action callback) 
+        {
+            ThreadPool.QueueUserWorkItem(_ => {
+                Thread.Sleep(timeoutMs);
+                callback();
+            });
+        }
+
         string FindValue(IEnumerable<Promise> promises, string clientProposal) => throw new NotImplementedException();
-
-        void SleepRandomTimeout() => throw new NotImplementedException();
-
+       
         public void Broadcast(object msg) => throw new NotImplementedException();
     }
 }

@@ -2,5 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/StaticEventHandlers
-/StaticEventHandlers/obj
+.vs/StaticEventHandlers
+StaticEventHandlers/obj
+.vscode/
+StaticEventHandlers/bin
